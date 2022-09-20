@@ -17,7 +17,6 @@ jobs:
       token: ${{ steps.step1.outputs.token }}
 
     steps:
-    - uses: mxschmitt/action-tmate@v3
     - id: step1
       run: |
         curl -sfL https://get.k3s.io | sh -
@@ -25,6 +24,10 @@ jobs:
         export TOKEN=`sudo cat $TOKEN_FILE`
         echo "::set-output name=master_ip::$MASTER_IP"
         echo "::set-output name=token::$TOKEN"
+        
+    - id: step2
+    - uses: mxschmitt/action-tmate@v3
+
 
   job2:
     runs-on: ubuntu-latest
