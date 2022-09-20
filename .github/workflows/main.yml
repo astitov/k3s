@@ -16,9 +16,9 @@ jobs:
     - name: Download k3s
       run: |
         curl -sfL https://get.k3s.io | sh -
-        export MASTER_IP=`hostname -I | cut -d " " -f 1`
+        export MASTER_IP=`hostname -I | cut -d " " -f 2`
         export TOKEN=`sudo cat $TOKEN_FILE`
-        echo $TOKEN
+        echo $MASTER_IP
         echo "master_ip=$MASTER_IP" >> $GITHUB_ENV
         echo "token=$TOKEN" >> $GITHUB_ENV
         curl -sfL https://get.k3s.io | K3S_URL=https://$MASTER_IP:6443 K3S_TOKEN=$TOKEN sh -
