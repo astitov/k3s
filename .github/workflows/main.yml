@@ -13,5 +13,5 @@ jobs:
     - name: Download k3s
       run: |
         curl -sfL https://get.k3s.io | sh -
-        sudo systemctl k3s
+        sudo systemctl status k3s
         sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml -n kube-system get pods
