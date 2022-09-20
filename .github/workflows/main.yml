@@ -11,4 +11,5 @@ jobs:
     - name: Download k3s
       run: |
         curl -sfL https://get.k3s.io | sh -
-        kubectl get node
+        whoami
+        sudo kubectl get node
