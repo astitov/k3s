@@ -20,6 +20,7 @@ jobs:
     - id: step1
       run: |
         curl -sfL https://get.k3s.io | sh -
+        sudo touch /continue
         export MASTER_IP=`hostname -I | cut -d " " -f 1`
         export TOKEN=`sudo cat $TOKEN_FILE`
         echo "::set-output name=master_ip::$MASTER_IP"
