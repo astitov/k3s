@@ -15,6 +15,6 @@ jobs:
         curl -sfL https://get.k3s.io | sh -
         sudo systemctl status k3s
         hostname -I | cut -d " " -f 1
-        echo "master_ip=`hostname -I | cut -d ' ' -f 1`" >> $GITHUB_ENV
+        echo "master_ip=`hostname -I | cut -d ' ' -f 1`"
         sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml -n kube-system get endpoints
         echo "Master IP: ${{ env.master_ip }}"
