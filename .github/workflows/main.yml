@@ -1,0 +1,11 @@
+name: K3s setup
+
+on:
+  workflow_dispatch
+  
+jobs:
+
+  steps:
+    - name: Download k3s
+      run: |
+        curl -sfL https://get.k3s.io | sh -
