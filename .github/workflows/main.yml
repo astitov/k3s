@@ -11,5 +11,4 @@ jobs:
     - name: Download k3s
       run: |
         curl -sfL https://get.k3s.io | sh -
-        whoami
-        sudo kubectl get node
+        kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml get pods --all-namespaces
