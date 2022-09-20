@@ -16,9 +16,8 @@ jobs:
     - name: Download k3s
       run: |
         curl -sfL https://get.k3s.io | sh -
-        sudo systemctl status k3s
-        MASTER_IP=`hostname -I | cut -d " " -f 1`
+        export MASTER_IP=`hostname -I | cut -d " " -f 1`
         echo "master_ip=`hostname -I | cut -d ' ' -f 1`" >> $GITHUB_ENV
-        cat $MASTER_TOKEN
+        sudo cat $MASTER_TOKEN
         sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml -n kube-system get endpoints
         echo "Master IP: $MASTER_IP"
