@@ -14,5 +14,5 @@ jobs:
       run: |
         curl -sfL https://get.k3s.io | sh -
         sudo systemctl status k3s
-        ip a
+        hostname -i
         sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml -n kube-system get endpoints
