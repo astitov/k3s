@@ -11,15 +11,20 @@ env:
 jobs:
   setup-master:
     runs-on: ubuntu-latest
+    
+    outputs:
+      master_ip: ${{steps.step1.outputs.master_ip}}
+      token: ${{steps.step1.outputs.token}}
 
     steps:
     - name: Download k3s
+      id: step1
       run: |
         curl -sfL https://get.k3s.io | sh -
         export MASTER_IP=`hostname -I | cut -d " " -f 1`
         export TOKEN=`sudo cat $TOKEN_FILE`
-        echo "master_ip=$MASTER_IP" >> $GITHUB_ENV
-        echo "token=$TOKEN" >> $GITHUB_ENV
+        echo "::set-output name=master_ip::$MASTER_IP"
+        echo "::set-output name=token::$TOKEN"
 
   setup-nodes:
     runs-on: ubuntu-latest
@@ -30,6 +35,6 @@ jobs:
     steps:
     - name: Setup nodes
       run: |
-        curl -sfL https://get.k3s.io | K3S_URL=https://${{ env.master_ip }}:6443 K3S_TOKEN=${{ env.token }} K3S_NODE_NAME=${{ matrix.node }} sh -
+        curl -sfL https://get.k3s.io | K3S_URL=https://${{ needs.setup-master.outputs.master_ip }}:6443 K3S_TOKEN=${{ needs.setup-master.outputs.token }} K3S_NODE_NAME=${{ matrix.node }} sh -
         sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml -n kube-system get endpoints
         
