@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  MASTER_TOKEN: /var/lib/rancher/k3s/server/node-token
+  TOKEN_FILE: /var/lib/rancher/k3s/server/node-token
   
 jobs:
   build:
@@ -17,7 +17,9 @@ jobs:
       run: |
         curl -sfL https://get.k3s.io | sh -
         export MASTER_IP=`hostname -I | cut -d " " -f 1`
-        echo "master_ip=`hostname -I | cut -d ' ' -f 1`" >> $GITHUB_ENV
-        sudo cat $MASTER_TOKEN
+        export TOKEN=`sudo cat $TOKEN_FILE`
+        echo "master_ip=$MASTER_IP" >> $GITHUB_ENV
+        echo "token=$TOKEN" >> $GITHUB_ENV
+        curl -sfL https://get.k3s.io | K3S_URL=https://$MASTER_IP:6443 K3S_TOKEN=$TOKEN sh -
         sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml -n kube-system get endpoints
-        echo "Master IP: $MASTER_IP"
+        
