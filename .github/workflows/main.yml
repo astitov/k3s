@@ -4,8 +4,10 @@ on:
   workflow_dispatch
   
 jobs:
+  build:
+    runs-on: ubuntu-latest
 
-  steps:
+    steps:
     - name: Download k3s
       run: |
         curl -sfL https://get.k3s.io | sh -
