@@ -26,8 +26,7 @@ jobs:
         echo "::set-output name=token::$TOKEN"
         
     - id: step2
-    - uses: mxschmitt/action-tmate@v3
-
+      uses: mxschmitt/action-tmate@v3
 
   job2:
     runs-on: ubuntu-latest
