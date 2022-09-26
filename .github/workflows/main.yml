@@ -3,18 +3,15 @@ name: terraform
 on:
   workflow_dispatch:
 
-env:
-  TOKEN_FILE: /var/lib/rancher/k3s/server/node-token
-  
 jobs:
-
-  job1:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: hashicorp/setup-terraform@v2
+  runs-on: ubuntu-latest
+  uses: actions/checkout@v3, hashicorp/setup-terraform@v2
+  env:
+    AWS_ACCESS_ID : ${{ secrets.AWS_ACCESS_ID }}
+    AWS_SECRET_KEY : ${{ secrets.AWS_SECRET_KEY }}
     
-    - id: step1
+  step:
+    - name: Terraform version
       run: terraform -version
         
 
