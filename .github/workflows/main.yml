@@ -1,4 +1,4 @@
-name: K3s setup
+name: terraform
 
 on:
   workflow_dispatch:
@@ -7,36 +7,15 @@ env:
   TOKEN_FILE: /var/lib/rancher/k3s/server/node-token
   
 jobs:
+
   job1:
     runs-on: ubuntu-latest
-    
-    outputs:
-      master_ip: ${{ steps.step1.outputs.master_ip }}
-      token: ${{ steps.step1.outputs.token }}
-
     steps:
+    - uses: actions/checkout@v3
+    - uses: hashicorp/setup-terraform@v2
+    
     - id: step1
-      run: |
-        curl -sfL https://get.k3s.io | sh -
-        sudo touch /continue
-        export MASTER_IP=`hostname -I | cut -d " " -f 1`
-        export TOKEN=`sudo cat $TOKEN_FILE`
-        echo "::set-output name=master_ip::$MASTER_IP"
-        echo "::set-output name=token::$TOKEN"
+      run: terraform -version
         
-    - id: step2
-      uses: mxschmitt/action-tmate@v3
 
-  job2:
-    runs-on: ubuntu-latest
-    needs: job1
-    strategy:
-      matrix:
-        node: [n1, n2, n3, n4]
-    
-    steps:
-    - id: step1
-      run: |
-        curl -sfL https://get.k3s.io | K3S_URL=https://${{ needs.job1.outputs.master_ip }}:6443 K3S_TOKEN=${{ needs.job1.outputs.token }} K3S_NODE_NAME=${{ matrix.node }} sh -
-        sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml -n kube-system get endpoints
         
