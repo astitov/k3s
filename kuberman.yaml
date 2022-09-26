@@ -1,0 +1,23 @@
+apiVersion : apps/v1
+kind : Deployment
+
+metadata :
+  name : kuberman-depl
+  labels :
+    app : my-depl
+  
+spec :
+  replicas : 3
+  selector :
+    matchLabels:
+      app : my-depl
+  template :
+    metadata :
+      labels:
+        app : my-depl
+    spec :
+      containers:
+        - name : nginx-ctr
+          image : nginx:latest
+          ports :
+          - containerPort : 80
