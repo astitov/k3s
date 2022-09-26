@@ -8,13 +8,14 @@ env:
   AWS_SECRET_KEY : ${{ secrets.AWS_SECRET_KEY }}
 
 jobs:
+
   job1:
-  runs-on: ubuntu-latest
-  uses: actions/checkout@v3, hashicorp/setup-terraform@v2
-   
-  step:
-    - name: Terraform version
-      run: terraform -version
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Terra
+      - uses: actions/checkout@v3, hashicorp/setup-terraform@v2
+      - run: terraform -version
         
 
         
