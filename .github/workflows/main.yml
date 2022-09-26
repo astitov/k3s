@@ -1,8 +1,6 @@
 name: K3s setup
 
 on:
-  push:
-    branches: ["main"]
   workflow_dispatch:
 
 env:
