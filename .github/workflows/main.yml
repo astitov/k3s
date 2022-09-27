@@ -35,4 +35,7 @@ jobs:
     - name: Sleep and destroy
       working-directory: terraform
       run: |
+        date
         sleep 60
+        date
+        terraform destroy -auto-approve -input=false
