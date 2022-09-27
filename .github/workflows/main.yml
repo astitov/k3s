@@ -28,5 +28,5 @@ jobs:
       working-directory: terraform
       run: |
         terraform -version
-        terraform fmt -check
+        terraform fmt -diff
         
