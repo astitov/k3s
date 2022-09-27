@@ -16,7 +16,7 @@ jobs:
     - uses: hashicorp/setup-terraform@v2
     
     - name: Install AWS CLI
-      run: !
+      run: |
         sudo apt update
         sudo apt -y install awscli
         aws --version
