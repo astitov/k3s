@@ -23,7 +23,6 @@ jobs:
         aws --version
         export AWS_ACCESS_KEY_ID
         export AWS_SECRET_ACCESS_KEY
-        echo $AWS_ACCESS_KEY_ID
     
     - name: Apply Terraform
       working-directory: terraform
@@ -32,5 +31,8 @@ jobs:
         terraform init
         terraform validate
         terraform plan
-      continue-on-error: true
-        
+
+    - name: Sleep and destroy
+      working-directory: terraform
+      run: |
+        sleep 60
