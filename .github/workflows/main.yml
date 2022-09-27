@@ -23,7 +23,7 @@ jobs:
         aws --version
         export AWS_ACCESS_KEY_ID="$AWS_ACCESS_ID"
         export AWS_SECRET_ACCESS_KEY="$AWS_SECRET_KEY"
-        export AWS_REGION="us-west-2"
+        echo "$AWS_ACCESS_KEY_ID"
     
     - name: Apply Terraform
       working-directory: terraform
