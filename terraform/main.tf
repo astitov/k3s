@@ -22,9 +22,10 @@ resource "random_pet" "name" {
 }
 
 resource "aws_instance" "my-vm" {
-  ami           = "ami-07eeacb3005b9beae"
-  instance_type = "t2.micro"
+  ami                    = "ami-07eeacb3005b9beae"
+  instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.my-sgroup.id]
+  count                  = 5
 
   tags = {
     Name = random_pet.name.id
