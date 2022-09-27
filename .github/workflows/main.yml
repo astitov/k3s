@@ -15,5 +15,11 @@ jobs:
     - uses: actions/checkout@v3
     - uses: hashicorp/setup-terraform@v2
     
-    - id: step1
+    - name: Install AWS CLI
+      run: !
+        sudo apt update
+        sudo apt -y install awscli
+        aws --version
+    
+    - name: Get TF version
       run: terraform -version
