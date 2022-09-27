@@ -32,7 +32,7 @@ resource "aws_instance" "my-vm" {
 }
 
 resource "aws_security_group" "my-sgroup" {
-  name = "${random_pet.name.id]-sgroup"
+  name = "${random_pet.name.id}-sgroup"
   ingress {
     from_port   = 80
     to_port     = 80
