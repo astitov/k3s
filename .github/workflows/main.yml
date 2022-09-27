@@ -27,7 +27,6 @@ jobs:
     - name: Apply Terraform
       working-directory: terraform
       run: |
-        terraform fmt -check
         terraform fmt -diff
         terraform init
         terraform validate
