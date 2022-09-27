@@ -17,12 +17,12 @@ jobs:
     
     - name: Update and install AWS CLI
       run: |
+        export AWS_ACCESS_KEY_ID
+        export AWS_SECRET_ACCESS_KEY
         sudo apt update
         sudo apt upgrade
         sudo apt -y install awscli
         aws --version
-        export AWS_ACCESS_KEY_ID
-        export AWS_SECRET_ACCESS_KEY
     
     - name: Apply Terraform
       working-directory: terraform
@@ -31,6 +31,8 @@ jobs:
         terraform init
         terraform validate
         terraform plan
+        terraform apply -auto-approve -input=false
+        terraform show
 
     - name: Sleep and destroy
       working-directory: terraform
