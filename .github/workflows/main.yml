@@ -36,7 +36,7 @@ jobs:
         
     - name: Test connection
       working-directory: terraform
-      run: terraform output aws_instance.my-vm.public_ip
+      run: terraform output public_ip
       continue-on-error: true
 
     - name: Sleep and destroy
