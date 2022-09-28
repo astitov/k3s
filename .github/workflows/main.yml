@@ -32,13 +32,15 @@ jobs:
         terraform validate
         terraform plan
         terraform apply -auto-approve -input=false
-        terraform show
+#        terraform show
+        
+    - name: Test connection
+      working-directory: terraform
+      run: terraform output aws_instance.my-vm.public_ip
+      continue-on-error: true
 
     - name: Sleep and destroy
       working-directory: terraform
       run: |
-        terraform output aws_instance.my-vm.public_ip
-        date
         sleep 60
-        date
         terraform destroy -auto-approve -input=false
