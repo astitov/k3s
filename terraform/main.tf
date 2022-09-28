@@ -85,8 +85,9 @@ resource "aws_route_table_association" "my-rt-privnet-assoc" {
 
 # Firewall
 
-resource "aws_security_group" "my-sgroup" {
-  name = "${random_pet.name.id}-sgroup"
+resource "aws_security_group" "my-pub-sg" {
+  vpc_id = aws_vpc.my-vpc.id
+
   ingress {
     from_port   = 22
     to_port     = 22
@@ -110,7 +111,7 @@ resource "aws_security_group" "my-sgroup" {
 resource "aws_instance" "my-vm" {
   ami                    = "ami-07eeacb3005b9beae"
   instance_type          = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.my-sgroup.id]
+  vpc_security_group_ids = [aws_security_group.my-pub-sg.id]
   subnet_id              = aws_subnet.my-pubnet.id
 }
 
