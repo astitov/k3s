@@ -21,6 +21,10 @@ resource "random_pet" "name" {
   length = 2
 }
 
+#
+#   VPC and networks
+#
+
 resource "aws_vpc" "my-vpc" {
   cidr_block = var.vpc_cidr
 }
@@ -36,9 +40,22 @@ resource "aws_subnet" "my-privnet" {
   cidr_block  = var.priv_cidr
 }
 
+# Gateways
+
 resource "aws_internet_gateway" "my-igw" {
   vpc_id = aws_vpc.my-vpc.id
 }
+
+resource "aws_eip" "my-elastic-ip" {
+  vpc = true
+}
+
+resource "aws_nat_gateway" "my-natgw" {
+  allocation_id = aws_eip.my-elastic-ip.id
+  subnet_id     = aws_subnet.my-pubnet.id
+}
+
+# Routing tables
 
 resource "aws_route_table" "my-igw-rt" {
   vpc_id = aws_vpc.my-vpc.id
@@ -48,28 +65,31 @@ resource "aws_route_table" "my-igw-rt" {
   }
 }
 
+resource "aws_route_table" "my-natgw-rt" {
+  vpc_id = aws_vpc.my-vpc.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.my-natgw.id
+  }
+}
+
 resource "aws_route_table_association" "my-rt-pubnet-assoc" {
   subnet_id       = aws_subnet.my-pubnet.id
   route_table_id  = aws_route_table.my-igw-rt.id
 }
 
-
-resource "aws_instance" "my-vm" {
-  ami                    = "ami-07eeacb3005b9beae"
-  instance_type          = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.my-sgroup.id]
-  count                  = 5
-
-  tags = {
-    Name = random_pet.name.id
-  }
+resource "aws_route_table_association" "my-rt-privnet-assoc" {
+  subnet_id       = aws_subnet.my-privnet.id
+  route_table_id  = aws_route_table.my-natgw-rt.id
 }
+
+# Firewall
 
 resource "aws_security_group" "my-sgroup" {
   name = "${random_pet.name.id}-sgroup"
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 22
+    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -81,3 +101,16 @@ resource "aws_security_group" "my-sgroup" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+
+#
+#   VM instances
+#
+
+resource "aws_instance" "my-vm" {
+  ami                    = "ami-07eeacb3005b9beae"
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.my-sgroup.id]
+  subnet_id              = aws_subnet.my-pubnet.id
+}
+
