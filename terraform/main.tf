@@ -49,7 +49,7 @@ resource "aws_route_table" "my-igw-rt" {
 }
 
 resource "aws_route_table_association" "my-rt-pubnet-assoc" {
-  subnet_id       = aws_subnet.my-pubnet
+  subnet_id       = aws_subnet.my-pubnet.id
   route_table_id  = aws_route_table.my-igw-rt.id
 }
 
