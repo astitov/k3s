@@ -21,6 +21,39 @@ resource "random_pet" "name" {
   length = 2
 }
 
+resource "aws_vpc" "my-vpc" {
+  cidr_block = var.vpc_cidr
+}
+
+resource "aws_subnet" "my-pubnet" {
+  vpc.id                  = aws_vpc.my-vpc.id
+  cidr_block              = var.pub_cidr
+  map_public_ip_on_launch = true
+}
+
+resource "aws_subnet" "my-privnet" {
+  vpc.id      = aws_vpc.my-vpc.id
+  cidr_block  = var.priv_cidr
+}
+
+resource "aws_internet_gateway" "my-igw" {
+  vpc_id = aws_vpc.my-vpc.id
+}
+
+resource "aws_route_table" "my-igw-rt" {
+  vpc_id = aws_vpc.my-vpc.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.my-igw.id
+  }
+}
+
+resource "aws_route_table_association" "my-rt-pubnet-assoc" {
+  subnet_id       = aws_subnet.my-pubnet
+  route_table_id  = aws_route_table.my-igw-rt.id
+}
+
+
 resource "aws_instance" "my-vm" {
   ami                    = "ami-07eeacb3005b9beae"
   instance_type          = "t2.micro"
