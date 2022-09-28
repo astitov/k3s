@@ -36,8 +36,8 @@ resource "aws_subnet" "my-pubnet" {
 }
 
 resource "aws_subnet" "my-privnet" {
-  vpc_id      = aws_vpc.my-vpc.id
-  cidr_block  = var.priv_cidr
+  vpc_id     = aws_vpc.my-vpc.id
+  cidr_block = var.priv_cidr
 }
 
 # Gateways
@@ -74,13 +74,13 @@ resource "aws_route_table" "my-natgw-rt" {
 }
 
 resource "aws_route_table_association" "my-rt-pubnet-assoc" {
-  subnet_id       = aws_subnet.my-pubnet.id
-  route_table_id  = aws_route_table.my-igw-rt.id
+  subnet_id      = aws_subnet.my-pubnet.id
+  route_table_id = aws_route_table.my-igw-rt.id
 }
 
 resource "aws_route_table_association" "my-rt-privnet-assoc" {
-  subnet_id       = aws_subnet.my-privnet.id
-  route_table_id  = aws_route_table.my-natgw-rt.id
+  subnet_id      = aws_subnet.my-privnet.id
+  route_table_id = aws_route_table.my-natgw-rt.id
 }
 
 # Firewall
