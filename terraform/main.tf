@@ -26,13 +26,13 @@ resource "aws_vpc" "my-vpc" {
 }
 
 resource "aws_subnet" "my-pubnet" {
-  vpc.id                  = aws_vpc.my-vpc.id
+  vpc_id                  = aws_vpc.my-vpc.id
   cidr_block              = var.pub_cidr
   map_public_ip_on_launch = true
 }
 
 resource "aws_subnet" "my-privnet" {
-  vpc.id      = aws_vpc.my-vpc.id
+  vpc_id      = aws_vpc.my-vpc.id
   cidr_block  = var.priv_cidr
 }
 
