@@ -37,6 +37,7 @@ jobs:
     - name: Sleep and destroy
       working-directory: terraform
       run: |
+        terraform output aws_instance.my-vm.public_ip
         date
         sleep 60
         date
