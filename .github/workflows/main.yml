@@ -36,8 +36,7 @@ jobs:
         
     - name: Test connection
       working-directory: terraform
-      run: terraform-bin output -raw public_ip
-      # ansible all -i $(terraform output -raw public_ip), -m ping -u ubuntu
+      run: ansible all -i $(terraform-bin output -raw public_ip), -m ping -u ubuntu
       continue-on-error: true
 
     - name: Sleep and destroy
