@@ -138,7 +138,11 @@ resource "aws_instance" "my_master" {
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.my_pub_sg.id]
   subnet_id              = aws_subnet.my_pubnet.id
-  user_data              = "curl -sfL https://get.k3s.io | sh -"
+  user_data              = << EOF
+                              #!/bin/bash
+                              curl -sfL https://get.k3s.io | sh -
+                              cat /var/lib/rancher/k3s/server/node-token
+                            EOF
 }
 
 resource "aws_instance" "my-worker" {
