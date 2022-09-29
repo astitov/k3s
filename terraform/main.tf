@@ -103,6 +103,31 @@ resource "aws_security_group" "my-pub-sg" {
   }
 }
 
+resource "aws_security_group" "my-priv-sg" {
+  vpc_id = aws_vpc.my-vpc.id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
+  }
+  
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 
 #
 #   VM instances
@@ -113,5 +138,12 @@ resource "aws_instance" "my-vm" {
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.my-pub-sg.id]
   subnet_id              = aws_subnet.my-pubnet.id
+  user_data              = "curl -sfL https://get.k3s.io | sh -"
 }
 
+resource "aws_instance" "my-worker" {
+  ami                    = "ami-07eeacb3005b9beae"
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.my-priv-sg.id]
+  subnet_id              = aws_subnet.my-privnet.id
+}
