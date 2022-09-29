@@ -143,7 +143,8 @@ resource "aws_instance" "my_master" {
 
 data "external" "get_k3s_token" {
   depends_on = [aws_instance.my_master]
-  program    = ["cat /var/lib/rancher/k3s/server/node-token"]
+  program    = ["date"]
+  # program    = ["cat /var/lib/rancher/k3s/server/node-token"]
 }
 
 resource "aws_instance" "my-worker" {
