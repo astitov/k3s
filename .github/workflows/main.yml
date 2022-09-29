@@ -36,7 +36,7 @@ jobs:
         
     - name: Test connection
       working-directory: terraform
-      run: terraform output -raw public_ip
+      run: terraform --nowrap output -raw public_ip
       # ansible all -i $(terraform output -raw public_ip), -m ping -u ubuntu
       continue-on-error: true
 
