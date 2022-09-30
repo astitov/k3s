@@ -1,6 +1,6 @@
 variable "my_ami" {
   type  = string
-  value = "ami-07eeacb3005b9beae"
+  default = "ami-07eeacb3005b9beae"
 }
 
 variable "vpc_cidr" {
