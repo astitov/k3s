@@ -30,4 +30,4 @@ jobs:
         ./nuke \
           --access-key-id ${AWS_ACCESS_KEY_ID} \
           --secret-access-key ${AWS_SECRET_ACCESS_KEY} \
-          -c ./aws-nuke-conf.yml
+          -c ./awsnuke-conf.yml
