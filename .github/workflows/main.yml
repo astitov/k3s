@@ -23,7 +23,7 @@ jobs:
         sudo apt upgrade
         sudo apt -y install awscli
         aws --version
-        aws sts get-caller-identity --output text --debug
+        aws sts get-caller-identity --output text --debug --region us-west-2 --no-sign-request
         #wget -qc ${NUKE_URL} -O - | tar -xz
         #mv ./aws-nuke-* ./aws-nuke
         #./aws-nuke --access-key-id ${AWS_ACCESS_KEY_ID} --secret-access-key ${AWS_SECRET_ACCESS_KEY}
