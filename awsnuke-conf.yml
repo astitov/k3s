@@ -5,3 +5,6 @@ regions:
 accounts:
   "626312210145": {}
   
+account-blocklist:
+- "999999999999"
+  
