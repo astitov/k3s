@@ -25,4 +25,5 @@ jobs:
         sudo apt -y install awscli
         aws --version
         wget -qc ${NUKE_URL} -O - | tar -xz
-        ls -lhA
+        mv ./aws-nuke-* ./aws-nuke
+        ./aws-nuke --access-key-id ${AWS_ACCESS_KEY_ID} --secret-access-key ${AWS_SECRET_ACCESS_KEY}
