@@ -134,7 +134,7 @@ resource "aws_security_group" "my_priv_sg" {
 #
 
 resource "aws_instance" "my_master" {
-  ami                    = "ami-07eeacb3005b9beae"
+  ami                    = var.my_ami
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.my_pub_sg.id]
   subnet_id              = aws_subnet.my_pubnet.id
@@ -142,14 +142,16 @@ resource "aws_instance" "my_master" {
 }
 
 data "external" "get_k3s_token" {
-  depends_on = [aws_instance.my_master]
-  program    = ["date"]
-  # program    = ["cat /var/lib/rancher/k3s/server/node-token"]
+  depends_on  = [aws_instance.my_master]
+  command     = ["uname -a"]
+  query       = { arg = "" }
 }
 
-resource "aws_instance" "my-worker" {
-  ami                    = "ami-07eeacb3005b9beae"
+resource "aws_instance" "my_worker" {
+  ami                    = var.my_ami
   instance_type          = "t2.micro"
+  count                  = 1
+  depends_on             = [aws_instance.my_master]
   vpc_security_group_ids = [aws_security_group.my_priv_sg.id]
   subnet_id              = aws_subnet.my_privnet.id
 }
