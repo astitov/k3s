@@ -24,8 +24,8 @@ jobs:
         sudo apt -y install awscli
         aws --version
         #aws sts get-caller-identity --output text --region us-west-2
+        aws iam create-account-alias --account-alias test-account
         wget -qc ${NUKE_URL} -O - | tar -xz
-        ls -lh aws-nuke-*
         cp aws-nuke-* nuke
         ./nuke \
           --access-key-id ${AWS_ACCESS_KEY_ID} \
