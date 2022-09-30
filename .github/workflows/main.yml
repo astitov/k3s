@@ -26,10 +26,11 @@ jobs:
         sudo apt -y install awscli
         aws --version
         #aws sts get-caller-identity --output text --region us-west-2
-        aws iam create-account-alias --account-alias nukeable-account --debug --region us-west-2
+        #aws iam create-account-alias --account-alias nukeable-account --region us-west-2
         wget -qc ${NUKE_URL} -O - | tar -xz
         cp aws-nuke-* nuke
-        ./nuke \
+        ./nuke --force \
           --access-key-id ${AWS_ACCESS_KEY_ID} \
           --secret-access-key ${AWS_SECRET_ACCESS_KEY} \
-          -c ./awsnuke-conf.yml
+          -c ./awsnuke-conf.yml \
+          
