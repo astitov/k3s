@@ -22,7 +22,7 @@ jobs:
         export AWS_ACCESS_KEY_ID
         export AWS_SECRET_ACCESS_KEY
         sudo apt update
-        #sudo apt upgrade
+        sudo apt upgrade
         sudo apt -y install awscli
         aws --version
         #aws sts get-caller-identity --output text --region us-west-2
@@ -33,4 +33,5 @@ jobs:
           --access-key-id ${AWS_ACCESS_KEY_ID} \
           --secret-access-key ${AWS_SECRET_ACCESS_KEY} \
           -c ./awsnuke-conf.yml \
+          --no-dry-run
           
