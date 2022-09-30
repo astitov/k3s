@@ -6,6 +6,10 @@ output "master_private_ip" {
   value = aws_instance.my_master.private_ip
 }
 
+output "worker_ip" {
+  value = aws_instance.my_worker[*].private_ip
+}
+
 output "k3s_token" {
-  value = data.external.get_k3s_token
+  value = data.external.get_k3s_token.result
 }
