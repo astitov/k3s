@@ -13,8 +13,7 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     steps:
-     - uses: actions/checkout@v3
-#     - uses: hashicorp/setup-terraform@v2
+    - uses: actions/checkout@v3
     
     - name: Update and install AWS-CLI, aws-nuke
       run: |
@@ -27,4 +26,4 @@ jobs:
         aws sts get-caller-identity --query "Account" --output text
         wget -qc ${NUKE_URL} -O - | tar -xz
         mv ./aws-nuke-* ./aws-nuke
-#        ./aws-nuke --access-key-id ${AWS_ACCESS_KEY_ID} --secret-access-key ${AWS_SECRET_ACCESS_KEY}
+        # ./aws-nuke --access-key-id ${AWS_ACCESS_KEY_ID} --secret-access-key ${AWS_SECRET_ACCESS_KEY}
