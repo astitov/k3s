@@ -1,6 +1,8 @@
 name: aws-nuke
 
 on:
+  push:
+    branches: ["nuke"]
   workflow_dispatch:
 
 env:
@@ -20,11 +22,11 @@ jobs:
         export AWS_ACCESS_KEY_ID
         export AWS_SECRET_ACCESS_KEY
         sudo apt update
-        sudo apt upgrade
+        #sudo apt upgrade
         sudo apt -y install awscli
         aws --version
         #aws sts get-caller-identity --output text --region us-west-2
-        aws iam create-account-alias --account-alias test-account
+        aws iam create-account-alias --account-alias testaccount --debug
         wget -qc ${NUKE_URL} -O - | tar -xz
         cp aws-nuke-* nuke
         ./nuke \
