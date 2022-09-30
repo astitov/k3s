@@ -25,8 +25,9 @@ jobs:
         aws --version
         #aws sts get-caller-identity --output text --region us-west-2
         wget -qc ${NUKE_URL} -O - | tar -xz
-        mv ./aws-nuke-* ./aws-nuke
-        ./aws-nuke \
+        ls -lh aws-nuke-*
+        mv aws-nuke-* nuke
+        ./nuke \
           --access-key-id ${AWS_ACCESS_KEY_ID} \
           --secret-access-key ${AWS_SECRET_ACCESS_KEY} \
           -c ./aws-nuke-conf.yml
