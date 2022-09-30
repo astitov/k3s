@@ -24,5 +24,5 @@ jobs:
         sudo apt upgrade
         sudo apt -y install awscli
         aws --version
-        wget -qc ${NUKE_URL} -O - | tar -x
+        wget -qc ${NUKE_URL} -O - | tar -xz
         ls -lhA
