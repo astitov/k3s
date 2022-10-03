@@ -11,5 +11,5 @@ output "worker_ip" {
 }
 
 output "k3s_token" {
-  value = data.external.get_k3s_token.result
+  value = data.external.get_k3s_token.result.token
 }
