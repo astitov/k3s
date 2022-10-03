@@ -1,5 +1,3 @@
 #!/bin/bash
 
-echo "{\"token\" : \"`cat /etc/hostname`\"}"
-
-#echo "{\"token\" : \"`cat /var/lib/rancher/k3s/server/node-token`\"}"
+echo "{\"token\" : \"`cat /var/lib/rancher/k3s/server/node-token`\"}"
