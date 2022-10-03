@@ -142,9 +142,9 @@ resource "aws_instance" "my_master" {
 }
 
 data "external" "get_k3s_token" {
-  depends_on  = [aws_instance.my_master]
-  program     = ["bash", "./k3s-token.sh"]
-  query       = { arg = "-a" }
+  depends_on = [aws_instance.my_master]
+  program    = ["bash", "./k3s-token.sh"]
+  #query      = { arg = "arg" }
 }
 
 resource "aws_instance" "my_worker" {
