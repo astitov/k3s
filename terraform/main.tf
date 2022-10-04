@@ -160,5 +160,6 @@ resource "aws_instance" "my_worker" {
   depends_on             = [aws_instance.my_master]
   vpc_security_group_ids = [aws_security_group.my_priv_sg.id]
   subnet_id              = aws_subnet.my_privnet.id
-  user_data              = ${data.template_file.k3s_agent.rendered}
+  #user_data              = ${data.template_file.k3s_agent.rendered}
+  user_data              = "curl -sfL https://get.k3s.io | sh - agent --token=k3s --server https://${aws_instance.my_master.private_ip}:6443"
 }
