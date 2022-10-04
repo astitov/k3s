@@ -28,6 +28,7 @@ jobs:
 
     - name: Create SSH keys
       run: |
+        mkdir $HOME/.ssh
         ssh-keygen -q -t rsa -b 4096 -N '' -f "$HOME/.ssh/id_rsa"
-        ls -lh .ssh/
+        ls -lh ~/.ssh/
     
