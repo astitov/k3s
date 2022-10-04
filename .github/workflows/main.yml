@@ -1,6 +1,8 @@
 name: terraform
 
 on:
+  push:
+    branch: ["ssh"]
   workflow_dispatch:
 
 env:
