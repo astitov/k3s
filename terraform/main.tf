@@ -72,7 +72,7 @@ resource "aws_security_group" "my_pub_sg" {
 
 resource "aws_key_pair" "my_ssh_key" {
   key_name   = "ssh_key"
-  public_key = "file(.ssh/id_rsa.pub)"
+  public_key = file(".ssh/id_rsa.pub")
 }
 
 #
