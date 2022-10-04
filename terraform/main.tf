@@ -138,13 +138,19 @@ resource "aws_instance" "my_master" {
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.my_pub_sg.id]
   subnet_id              = aws_subnet.my_pubnet.id
-  user_data              = "curl -sfL https://get.k3s.io | sh - && while [! -f /var/lib/rancher/k3s/server/node-token]; do sleep(60); done;"
+  user_data              = "curl -sfL https://get.k3s.io | sh - server --token=k3s"
 }
 
 data "external" "get_k3s_token" {
   depends_on = [aws_instance.my_master]
   program    = ["bash", "./k3s-token.sh"]
   #query      = { arg = "arg" }
+}
+
+data "template_file" "k3s_agent" {
+  template    = "${file("k3s-agent-init.sh.tpl")}"
+  vars        = { master_ip = "${aws_instance.my_master.private_ip}" }
+  depends_on  = [aws_instance.my_master]
 }
 
 resource "aws_instance" "my_worker" {
@@ -154,4 +160,5 @@ resource "aws_instance" "my_worker" {
   depends_on             = [aws_instance.my_master]
   vpc_security_group_ids = [aws_security_group.my_priv_sg.id]
   subnet_id              = aws_subnet.my_privnet.id
+  user_data              = ${data.template_file.k3s_agent.rendered}
 }
