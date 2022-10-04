@@ -23,7 +23,13 @@ jobs:
         sudo apt upgrade
         sudo apt -y install awscli ansible
         aws --version
+
+    - name: Create SSH keys
+      run: |
+        ssh-keygen -t rsa -b 4096 
+        ls -lh .ssh/
     
+/*
     - name: Apply Terraform
       working-directory: terraform
       run: |
@@ -45,3 +51,4 @@ jobs:
       run: |
         sleep 60
         terraform destroy -auto-approve -input=false
+*/
