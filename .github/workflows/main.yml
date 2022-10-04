@@ -45,8 +45,7 @@ jobs:
         
     - name: Test connection
       working-directory: terraform
-      run: terraform-bin output -raw k3s_token
-      # ansible all -i $(terraform-bin output -raw public_ip), -m ping -u ubuntu
+      run: ansible all -i $(terraform-bin output -raw public_ip), -m ping
       continue-on-error: true
 
     - name: Sleep and destroy

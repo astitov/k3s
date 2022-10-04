@@ -68,6 +68,13 @@ resource "aws_security_group" "my_pub_sg" {
   }
 }
 
+# SSH key
+
+resource "aws_key_pair" "my_ssh_key" {
+  key_name   = "ssh_key"
+  public_key = "file(.ssh/id_rsa.pub)"
+}
+
 #
 #   VM instances
 #
@@ -77,6 +84,7 @@ resource "aws_instance" "my_master" {
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.my_pub_sg.id]
   subnet_id              = aws_subnet.my_pubnet.id
+  key_name               = "${aws_key_pair.my_ssh_key.key_name}"
   user_data              = "curl -sfL https://get.k3s.io | sh - server --token=k3s"
 }
 
