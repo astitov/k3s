@@ -29,26 +29,3 @@ jobs:
         ssh-keygen -t rsa -b 4096 
         ls -lh .ssh/
     
-/*
-    - name: Apply Terraform
-      working-directory: terraform
-      run: |
-        terraform fmt -diff
-        terraform init
-        terraform validate
-        terraform plan
-        terraform apply -auto-approve -input=false
-#        terraform show
-        
-    - name: Test connection
-      working-directory: terraform
-      run: terraform-bin output -raw k3s_token
-      # ansible all -i $(terraform-bin output -raw public_ip), -m ping -u ubuntu
-      continue-on-error: true
-
-    - name: Sleep and destroy
-      working-directory: terraform
-      run: |
-        sleep 60
-        terraform destroy -auto-approve -input=false
-*/
