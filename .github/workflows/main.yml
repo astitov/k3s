@@ -31,9 +31,6 @@ jobs:
       run: |
         mkdir .ssh
         ssh-keygen -q -t rsa -b 2048 -N '' -f ".ssh/id_rsa"
-        ls -lh .ssh/
-        cat .ssh/id_rsa.pub
-        ssh-keygen -y -f .ssh/id_rsa
     
     - name: Apply Terraform
       working-directory: terraform
