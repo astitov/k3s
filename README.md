@@ -1,2 +1,2 @@
-# k3s
-K3s workflow
+# A try to Terraform AWS for k3s
+Requires a paid AWS acc which waits to be paid for...
