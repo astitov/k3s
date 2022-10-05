@@ -31,6 +31,7 @@ jobs:
       run: |
         mkdir .ssh
         ssh-keygen -q -t rsa -b 2048 -N '' -f ".ssh/id_rsa"
+        ls -lh .ssh/
 
     - name: Apply Terraform
       working-directory: terraform
@@ -45,8 +46,7 @@ jobs:
     - name: Test connection
       working-directory: terraform
       run: |
-        ls -lh .ssh/
-        ssh -i .ssh/id_rsa -vvv -l root $(terraform-bin output -raw public_ip) uname
+        ssh ubuntu@$(terraform-bin output -raw public_ip) -i .ssh/id_rsa -vvv lsb_release -a
       #ansible -vvv -u ubuntu --private-key .ssh/id_rsa-i -m ping $(terraform-bin output -raw public_ip)
       continue-on-error: true
 
