@@ -66,9 +66,7 @@ resource "aws_security_group" "my_pub_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
-
-#   SSH key
+} #   SSH key
 
 resource "aws_key_pair" "my_ssh_key" {
   key_name   = "ssh_key"
@@ -85,5 +83,5 @@ resource "aws_instance" "my_master" {
   vpc_security_group_ids = [aws_security_group.my_pub_sg.id]
   subnet_id              = aws_subnet.my_pubnet.id
   key_name               = aws_key_pair.my_ssh_key.key_name
-  user_data              = "curl -sfL https://get.k3s.io | sh - server --token=k3s"
+#  user_data              = "curl -sfL https://get.k3s.io | sh - server --token=k3s"
 }
