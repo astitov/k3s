@@ -6,6 +6,3 @@ output "master_private_ip" {
   value = aws_instance.my_master.private_ip
 }
 
-output "pubkey" {
-  value = aws_key_pair.my_ssh_key.public_key
-}
