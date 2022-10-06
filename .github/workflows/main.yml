@@ -45,8 +45,7 @@ jobs:
     - name: Test connection
       working-directory: terraform
       run: |
-        ls -lh .ssh/
-        ssh ubuntu@$(terraform-bin output -raw public_ip) -i .ssh/id_rsa -vvv -o StrictHostKeyChecking=no lsb_release -a
+        ssh ubuntu@$(terraform-bin output -raw public_ip) -i .ssh/id_rsa -vvv lsb_release -a
       #ansible -vvv -u ubuntu --private-key .ssh/id_rsa-i -m ping $(terraform-bin output -raw public_ip)
       continue-on-error: true
 
