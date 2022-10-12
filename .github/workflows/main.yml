@@ -47,7 +47,7 @@ jobs:
       run: |
         sleep 10
         # ssh ubuntu@$(terraform-bin output -raw public_ip) -i .ssh/id_rsa -vvv -o "StrictHostKeyChecking=no" lsb_release -a
-        ansible -vvv -u ubuntu --private-key .ssh/id_rsa-i -m ping $(terraform-bin output -raw public_ip)
+        ansible all -i $(terraform-bin output -raw public_ip), -u ubuntu --private-key .ssh/id_rsa -m ping
       continue-on-error: true
 
     - name: Destroy
