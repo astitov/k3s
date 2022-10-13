@@ -11,7 +11,19 @@ env:
 
 jobs:
 
-  job1:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: hashicorp/setup-terraform@v2
+    - name: Terraform linter
+      working-directory: terraform
+      run: terraform fmt -diff
+    - name: YAML linter
+      working-directory: terraform
+      run: yamllint *.y{a,}ml
+
+  job2:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -35,7 +47,6 @@ jobs:
     - name: Apply Terraform
       working-directory: terraform
       run: |
-        terraform fmt -diff
         terraform init
         terraform validate
         terraform plan
@@ -48,7 +59,7 @@ jobs:
         sleep 10
         # ssh ubuntu@$(terraform-bin output -raw public_ip) -i .ssh/id_rsa -vvv -o "StrictHostKeyChecking=no" lsb_release -a
         export ANSIBLE_HOST_KEY_CHECKING=false
-        ansible all -i $(terraform-bin output -raw public_ip), -vvv -u ubuntu --private-key .ssh/id_rsa -m ping
+        ansible all -i $(terraform-bin output -raw public_ip), -u ubuntu --private-key .ssh/id_rsa -m ping
       continue-on-error: true
 
     - name: Destroy
