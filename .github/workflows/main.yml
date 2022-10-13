@@ -14,14 +14,12 @@ jobs:
   linters:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: hashicorp/setup-terraform@v2
-    - name: Terraform linter
-      working-directory: terraform
-      run: terraform fmt -diff
-    - name: YAML linter
-      working-directory: terraform
-      run: yamllint .
+    - name: Run super-linter
+      uses: actions/checkout@v3
+      uses: github/super-linter@v4
+      env:
+        VALIDATE_ALL_CODEBASE: false
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
   job2:
     runs-on: ubuntu-latest
