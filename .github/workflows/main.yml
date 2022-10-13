@@ -14,8 +14,12 @@ jobs:
   linters:
     runs-on: ubuntu-latest
     steps:
-    - name: Run super-linter
+    - name: Make checkout
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Run super-linter
       uses: github/super-linter@v4
       env:
         VALIDATE_ALL_CODEBASE: false
