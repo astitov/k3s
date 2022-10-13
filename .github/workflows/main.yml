@@ -11,7 +11,7 @@ env:
 
 jobs:
 
-  linter:
+  linters:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -21,7 +21,7 @@ jobs:
       run: terraform fmt -diff
     - name: YAML linter
       working-directory: terraform
-      run: yamllint *.y{a,}ml
+      run: yamllint .
 
   job2:
     runs-on: ubuntu-latest
