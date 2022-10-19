@@ -2,7 +2,7 @@ name: terraform
 
 on:
   push:
-    branch: ["ssh"]
+    branches: ["ssh"]
   workflow_dispatch:
 
 env:
@@ -25,7 +25,7 @@ jobs:
         VALIDATE_ALL_CODEBASE: false
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-  job2:
+  terraforming:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
