@@ -4,22 +4,14 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 4.16"
     }
-    random = {
-      source = "hashicorp/random"
-    }
   }
   required_version = ">= 1.2.0"
 }
-
-provider "random" {}
 
 provider "aws" {
   region = "us-west-2"
 }
 
-resource "random_pet" "name" {
-  length = 2
-}
 
 #
 #   VPC and networks
@@ -35,24 +27,10 @@ resource "aws_subnet" "my_pubnet" {
   map_public_ip_on_launch = true
 }
 
-resource "aws_subnet" "my_privnet" {
-  vpc_id     = aws_vpc.my_vpc.id
-  cidr_block = var.priv_cidr
-}
-
 # Gateways
 
 resource "aws_internet_gateway" "my_igw" {
   vpc_id = aws_vpc.my_vpc.id
-}
-
-resource "aws_eip" "my_elastic_ip" {
-  vpc = true
-}
-
-resource "aws_nat_gateway" "my_natgw" {
-  allocation_id = aws_eip.my_elastic_ip.id
-  subnet_id     = aws_subnet.my_pubnet.id
 }
 
 # Routing tables
@@ -65,22 +43,9 @@ resource "aws_route_table" "my_igw_rt" {
   }
 }
 
-resource "aws_route_table" "my_natgw_rt" {
-  vpc_id = aws_vpc.my_vpc.id
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.my_natgw.id
-  }
-}
-
 resource "aws_route_table_association" "my_rt_pubnet_assoc" {
   subnet_id      = aws_subnet.my_pubnet.id
   route_table_id = aws_route_table.my_igw_rt.id
-}
-
-resource "aws_route_table_association" "my_rt_privnet_assoc" {
-  subnet_id      = aws_subnet.my_privnet.id
-  route_table_id = aws_route_table.my_natgw_rt.id
 }
 
 # Firewall
@@ -89,7 +54,7 @@ resource "aws_security_group" "my_pub_sg" {
   vpc_id = aws_vpc.my_vpc.id
 
   ingress {
-    from_port   = 22
+    from_port   = 0
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
@@ -101,33 +66,12 @@ resource "aws_security_group" "my_pub_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+} #   SSH key
+
+resource "aws_key_pair" "my_ssh_key" {
+  key_name   = "ssh_key"
+  public_key = file(".ssh/id_rsa.pub")
 }
-
-resource "aws_security_group" "my_priv_sg" {
-  vpc_id = aws_vpc.my_vpc.id
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = [var.vpc_cidr]
-  }
-  
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
 
 #
 #   VM instances
@@ -138,28 +82,7 @@ resource "aws_instance" "my_master" {
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.my_pub_sg.id]
   subnet_id              = aws_subnet.my_pubnet.id
-  user_data              = "curl -sfL https://get.k3s.io | sh - server --token=k3s"
-}
-
-data "external" "get_k3s_token" {
-  depends_on = [aws_instance.my_master]
-  program    = ["bash", "./k3s-token.sh"]
-  #query      = { arg = "arg" }
-}
-
-data "template_file" "k3s_agent" {
-  template    = "${file("k3s-agent-init.sh.tpl")}"
-  vars        = { master_ip = "${aws_instance.my_master.private_ip}" }
-  depends_on  = [aws_instance.my_master]
-}
-
-resource "aws_instance" "my_worker" {
-  ami                    = var.my_ami
-  instance_type          = "t2.micro"
-  count                  = 1
-  depends_on             = [aws_instance.my_master]
-  vpc_security_group_ids = [aws_security_group.my_priv_sg.id]
-  subnet_id              = aws_subnet.my_privnet.id
-  #user_data              = ${data.template_file.k3s_agent.rendered}
-  user_data              = "curl -sfL https://get.k3s.io | sh - agent --token=k3s --server https://${aws_instance.my_master.private_ip}:6443"
+  key_name               = aws_key_pair.my_ssh_key.key_name
+#  user_data              = "curl -sfL https://get.k3s.io | sh - server --token=k3s"
+  user_data              = "sudo ufw disable"
 }

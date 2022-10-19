@@ -1,20 +1,36 @@
 name: terraform
 
 on:
+  push:
+    branch: ["ssh"]
   workflow_dispatch:
 
 env:
   AWS_ACCESS_KEY_ID : ${{ secrets.AWS_ACCESS_ID }}
   AWS_SECRET_ACCESS_KEY : ${{ secrets.AWS_SECRET_KEY }}
-  
+
 jobs:
 
-  job1:
+  linters:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Make checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Run super-linter
+      uses: github/super-linter@v4
+      env:
+        VALIDATE_ALL_CODEBASE: false
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+  job2:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: hashicorp/setup-terraform@v2
-    
+
     - name: Update and install AWS-CLI, Ansible
       run: |
         export AWS_ACCESS_KEY_ID
@@ -23,25 +39,32 @@ jobs:
         sudo apt upgrade
         sudo apt -y install awscli ansible
         aws --version
-    
+
+    - name: Generate SSH keys
+      working-directory: terraform
+      run: |
+        mkdir .ssh
+        ssh-keygen -q -t rsa -b 2048 -N '' -f ".ssh/id_rsa"
+
     - name: Apply Terraform
       working-directory: terraform
       run: |
-        terraform fmt -diff
         terraform init
         terraform validate
         terraform plan
         terraform apply -auto-approve -input=false
-#        terraform show
-        
+        # terraform show
+
     - name: Test connection
       working-directory: terraform
-      run: terraform-bin output -raw k3s_token
-      # ansible all -i $(terraform-bin output -raw public_ip), -m ping -u ubuntu
+      run: |
+        sleep 10
+        # ssh ubuntu@$(terraform-bin output -raw public_ip) -i .ssh/id_rsa -vvv -o "StrictHostKeyChecking=no" lsb_release -a
+        export ANSIBLE_HOST_KEY_CHECKING=false
+        ansible all -i $(terraform-bin output -raw public_ip), -u ubuntu --private-key .ssh/id_rsa -m ping
       continue-on-error: true
 
-    - name: Sleep and destroy
+    - name: Destroy
       working-directory: terraform
       run: |
-        sleep 60
         terraform destroy -auto-approve -input=false
